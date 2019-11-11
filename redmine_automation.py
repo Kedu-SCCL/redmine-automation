@@ -122,10 +122,10 @@ class Redmine:
         return [self.TimeEntry(data) for data in r.json()['time_entries']]
 
     def updateIssue(self, issue_id, data):
-        print "Updating issue {id} with data:{data}".format(
+        print("Updating issue {id} with data:{data}".format(
             id=issue_id,
             data=data,
-        )
+        ))
         r = self.session.put(self.get_issue_url(issue_id), data=json.dumps(data))
         return r
 
@@ -157,7 +157,7 @@ class Redmine:
             t = self.get_data()
             output = "Redmine %s object:\n" % self.objType
             output = output + "{\n"
-            for k, v in t.iteritems():
+            for k, v in t.items():
                 output = output + "    '%s': '%s',\n" % (k, v)
             output = output + "}"
             return output

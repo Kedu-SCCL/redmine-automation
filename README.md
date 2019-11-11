@@ -24,6 +24,14 @@ time_entry_id = 17
 
 ## Redmine generic object
 
+Prepare redmine object using a previously B64encoded API key:
+
+```
+r = Redmine(url = url, b64_api_access_key = b64_api_access_key)
+```
+
+Or use a file with username and password keys:
+
 ```
 r = Redmine(url=url,pass_file=pass_file)
 ```
