@@ -72,9 +72,11 @@ data = {'issue':{
     },
 }
 print r.createIssue(data)
-# If everything went ok -> <Response [201]>
-# Otherwise -> <Response [404]>
 ```
+
+If everything went ok -> <Response [201]>
+
+Otherwise -> <Response [404]>
 
 ## Get Time Entry given its ID
 
@@ -84,6 +86,7 @@ print te
 ```
 
 ## Get all Time Entries of a given Issue
+
 ```
 data = {
     'issue_id':issue_id
@@ -104,9 +107,10 @@ data = {'time_entry':{
 }
 response = r.createTimeEntry(data)
 print response
-# If everything went ok -> <Response [201]>
-# Otherwise -> <Response [422]>
 ```
+
+If everything went ok -> <Response [201]>
+Otherwise -> <Response [422]>
 
 # Credits
 
@@ -123,4 +127,3 @@ print response
 - [1] http://redmine.org
 - [2] https://github.com/kennethreitz/requests
 - [3] https://github.com/alourie/pyred
-
