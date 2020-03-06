@@ -20,7 +20,7 @@
 
 import os
 import requests
-import json
+from json import dumps, JSONDecodeError
 from base64 import b64decode
 
 class Redmine:
@@ -31,7 +31,6 @@ class Redmine:
         self.session.auth = auth or (b64decode(b64_api_access_key), None)
         if not self.session.auth:
             raise Exception(
-                #"Error! No auth nor password file for redmine were given!"
                 "Error! No auth nor API access key for redmine were given!"
             )
         self.session.verify = False
@@ -71,7 +70,7 @@ class Redmine:
         return self.Project(r.json())
 
     def getProjects(self):
-        r = self.session.get(self.get_project_url(), data=json.dumps({'limit': 999}))
+        r = self.session.get(self.get_project_url(), data=dumps({'limit': 999}))
         try:
             return [self.Project(data) for data in r.json()['projects']]
         except KeyError:
@@ -92,7 +91,7 @@ class Redmine:
         elif not criteria:
             criteria = ({'limit': 100})
         r = self.session.get(self.get_issue_url(),
-                       data=json.dumps(criteria))
+                       data=dumps(criteria))
         try:
             return [self.Issue(data) for data in r.json()['issues']]
         except KeyError:
@@ -105,37 +104,30 @@ class Redmine:
         elif not criteria:
             criteria = ({'limit': 100})
         r = self.session.get(self.get_time_entry_url(),
-                       data=json.dumps(criteria))
+                       data=dumps(criteria))
+        # r.json() will fail with a 403 response
         try:
             return [self.TimeEntry(data) for data in r.json()['time_entries']]
         except KeyError:
             raise TypeError(r.json()['errors']) 
-
-    def getTimeEntries(self, criteria=None):
-        ''' Get Time Entries of a particular Issue filtered by criteria '''
-        if criteria and not 'limit' in criteria:
-            criteria.update({'limit': 100})
-        elif not criteria:
-            criteria = ({'limit': 100})
-        r = self.session.get(self.get_time_entry_url(),
-                       data=json.dumps(criteria))
-        return [self.TimeEntry(data) for data in r.json()['time_entries']]
+        except JSONDecodeError:
+            return self.TimeEntry({'message': '403 forbidden'})
 
     def updateIssue(self, issue_id, data):
         print("Updating issue {id} with data:{data}".format(
             id=issue_id,
             data=data,
         ))
-        r = self.session.put(self.get_issue_url(issue_id), data=json.dumps(data))
+        r = self.session.put(self.get_issue_url(issue_id), data=dumps(data))
         return r
 
     def createIssue(self, data):
-        r = self.session.post(self.get_issue_url(), data=json.dumps(data))
+        r = self.session.post(self.get_issue_url(), data=dumps(data))
         return r
 
     def createTimeEntry(self, data):
         ''' Creates a Time Entry attached to a given Issue or Project '''
-        r = self.session.post(self.get_time_entry_url(), data=json.dumps(data))
+        r = self.session.post(self.get_time_entry_url(), data=dumps(data))
         return r
 
     class RedmineObj(object):
