@@ -43,7 +43,8 @@ p = r.getProject(name=project_id)
 ```
 
 ## Get all issues of a given project
-'''
+
+```
 criteria = {
     'project_id':project_id
 }
